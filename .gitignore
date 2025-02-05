@@ -11,4 +11,4 @@ wheels/
 .venv
 
 # data
-*.csv
+995,000_rows.csv
