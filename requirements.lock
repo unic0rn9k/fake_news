@@ -124,6 +124,7 @@ jupyter-events==0.12.0
     # via jupyter-server
 jupyter-lsp==2.2.5
     # via jupyterlab
+    # via jupyterlab-lsp
 jupyter-server==2.15.0
     # via jupyter-lsp
     # via jupyterlab
@@ -134,7 +135,10 @@ jupyter-server-terminals==0.5.3
     # via jupyter-server
 jupyterlab==4.3.5
     # via jupyter
+    # via jupyterlab-lsp
     # via notebook
+jupyterlab-lsp==5.1.0
+    # via fake-news
 jupyterlab-pygments==0.3.0
     # via nbconvert
 jupyterlab-server==2.27.3
