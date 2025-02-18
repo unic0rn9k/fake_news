@@ -14,9 +14,6 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from string import punctuation
 
-def hello() -> str:
-    return "Hello from fake-news!"
-
 def tokenize(sentences: List[str]) -> List[List[str]]:
     stemmer = PorterStemmer()
     stop_words = set(stopwords.words('english')) | set(punctuation) | set("-'\"`’“”–—‘") | set(["''", "``"])
