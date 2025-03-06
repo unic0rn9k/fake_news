@@ -20,9 +20,13 @@ def tokenize(sentences: List[str]) -> List[List[str]]:
     count_with_stop = 0
     count_without_stop = 0
     result = []
+    before_stemming = {}
+    after_stemming = {}
     for curr_sentence in sentences:
         tokens_in_sentences_not_stop = []
         for word in word_tokenize(str(curr_sentence)):
+            before_stemming[word] = before_stemming.get(word, 0) + 1
+            after_stemming[stemmer.stem(word)] = after_stemming.get(stemmer.stem(word), 0) + 1
             current_word = stemmer.stem(word)
             if current_word not in stop_words:
                 tokens_in_sentences_not_stop.append(current_word)
@@ -30,8 +34,11 @@ def tokenize(sentences: List[str]) -> List[List[str]]:
             count_with_stop += 1
         result.append(tokens_in_sentences_not_stop)
 
-    reduction_rate = (count_with_stop-count_without_stop)/count_with_stop
-    print(f"Redcuction rate: {reduction_rate * 100}%")
+    reduction_rate_stem = (len(before_stemming) - len(after_stemming)) / len(before_stemming)
+    print(f"Reduction rate for stemming: {reduction_rate_stem * 100}%")
+
+    reduction_rate_stop = (count_with_stop - count_without_stop) / count_with_stop
+    print(f"Reduction rate for stopwords: {reduction_rate_stop * 100}%")
 
     return result
 
@@ -58,4 +65,3 @@ def word_freq(df: pd.DataFrame, top_k: int) -> Dict[str, int]:
     }
 
     return word_freq
-
