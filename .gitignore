@@ -12,3 +12,7 @@ wheels/
 
 # data
 995,000_rows.csv
+
+#models
+bert
+bert2

@@ -14,7 +14,7 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from string import punctuation
 
-def tokenize(sentences: List[str]) -> List[List[str]]:
+def tokenize(sentences: List[str], print_reduction=True) -> List[List[str]]:
     stemmer = PorterStemmer()
     stop_words = set(stopwords.words('english')) | set(punctuation) | set("-'\"`’“”–—‘") | set(["''", "``"])
     count_with_stop = 0
@@ -31,7 +31,9 @@ def tokenize(sentences: List[str]) -> List[List[str]]:
         result.append(tokens_in_sentences_not_stop)
 
     reduction_rate = (count_with_stop-count_without_stop)/count_with_stop
-    print(f"Redcuction rate: {reduction_rate * 100}%")
+
+    if print_reduction:
+        print(f"Redcuction rate: {reduction_rate * 100}%")
 
     return result
 
