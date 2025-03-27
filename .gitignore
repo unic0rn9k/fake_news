@@ -16,3 +16,5 @@ wheels/
 #models
 bert
 bert2
+*.zip
+*.tsv
