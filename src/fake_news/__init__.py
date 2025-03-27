@@ -44,7 +44,7 @@ def load_dataset(path: str, n_rows: int) -> pd.DataFrame:
     
 
 
-def word_freq(df: pd.DataFrame, col: str, top_k: int) -> Dict[str, int]:
+def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, int]:
     # Count the top 20 most frequent words grouped by "type" (aka the training set label / prediction target)
     word_freq = {}
     for sent, label in zip(df[col], df["type"]):
