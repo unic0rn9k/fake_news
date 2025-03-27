@@ -4,6 +4,33 @@ import numpy as np # Yall better know this one!
 import plotly.express as px # Good for making interactive plots
 import nltk # Referenced in the assignment
 from typing import Dict, List
+from multiprocessing import Pool
+
+
+import re
+import pandas as pd
+import numpy as np
+import nltk
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from typing import Dict, List
+from multiprocessing import Pool
+
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+from string import punctuation
+
+# Define the stemmer and stopwords
+stemmer = PorterStemmer()
+stop_words = set(stopwords.words('english')) | set(punctuation) | set("-'\"`’“”–—‘") | set(["''", "``"])
+
 
 nltk.download('punkt_tab')
 nltk.download('wordnet')
@@ -14,35 +41,24 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from string import punctuation
 
-def tokenize(sentences: List[str], print_reduction=True) -> List[List[str]]:
-    stemmer = PorterStemmer()
-    stop_words = set(stopwords.words('english')) | set(punctuation) | set("-'\"`’“”–—‘") | set(["''", "``"])
-    count_with_stop = 0
-    count_without_stop = 0
-    result = []
-    for curr_sentence in sentences:
-        tokens_in_sentences_not_stop = []
-        for word in word_tokenize(str(curr_sentence)):
-            current_word = stemmer.stem(word)
-            if current_word not in stop_words:
-                tokens_in_sentences_not_stop.append(current_word)
-                count_without_stop += 1
-            count_with_stop += 1
-        result.append(tokens_in_sentences_not_stop)
-
-    reduction_rate = (count_with_stop-count_without_stop)/count_with_stop
-
-    if print_reduction:
-        print(f"Redcuction rate: {reduction_rate * 100}%")
-
-    return result
-
 def load_dataset(path: str, n_rows: int) -> pd.DataFrame:
     return pd.read_csv(path, low_memory=False, nrows=n_rows)
 
-#def toeknize(text_col: List[str]) -> List[List[str]]:
+def tokenize_single_sentence(curr_sentence: str) -> List[str]:
+    if not isinstance(curr_sentence, str):
+        curr_sentence = str(curr_sentence) if curr_sentence is not None else ""
     
+    tokens_in_sentences_not_stop = []
+    for word in word_tokenize(curr_sentence):
+        current_word = stemmer.stem(word.lower())  # Stem the word
+        if current_word not in stop_words:  # Remove stopwords
+            tokens_in_sentences_not_stop.append(current_word)
+    return tokens_in_sentences_not_stop
 
+def tokenize(sentences: List[str], print_reduction=True) -> List[List[str]]:
+    with Pool() as pool:
+        result = pool.map(tokenize_single_sentence, sentences)
+    return result
 
 def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, int]:
     # Count the top 20 most frequent words grouped by "type" (aka the training set label / prediction target)

@@ -16,5 +16,6 @@ wheels/
 #models
 bert
 bert2
+bert4
 *.zip
 *.tsv
