@@ -13,6 +13,10 @@ dependencies = [
     "nltk>=3.9.1",
     "jupyterlab-lsp>=5.1.0",
     "torch>=2.6.0",
+    "torchtext>=0.18.0",
+    "tokenizers>=0.21.1",
+    "transformers>=4.50.0",
+    "matplotlib>=3.10.1",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

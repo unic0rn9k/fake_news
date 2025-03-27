@@ -12,3 +12,10 @@ wheels/
 
 # data
 995,000_rows.csv
+.DS_Store
+
+#models
+bert
+bert2
+*.zip
+*.tsv
