@@ -34,6 +34,27 @@ def tokenize_single_sentence(curr_sentence: str) -> List[str]:
             tokens_in_sentences_not_stop.append(current_word)
     return tokens_in_sentences_not_stop
 
+def tokenize_old(sentences: List[str], print_reduction=True) -> List[List[str]]:
+    stemmer = PorterStemmer()
+    stop_words = set(stopwords.words('english')) | set(punctuation) | set("-'\"`’“”–—‘") | set(["''", "``"])
+    count_with_stop = 0
+    count_without_stop = 0
+    result = []
+    for curr_sentence in sentences:
+        tokens_in_sentences_not_stop = []
+        for word in word_tokenize(str(curr_sentence)):
+            current_word = stemmer.stem(word)
+            if current_word not in stop_words:
+                tokens_in_sentences_not_stop.append(current_word)
+                count_without_stop += 1
+            count_with_stop += 1
+        result.append(tokens_in_sentences_not_stop)
+
+    reduction_rate = (count_with_stop-count_without_stop)/count_with_stop
+
+    if print_reduction:
+        print(f"Redcuction rate: {reduction_rate * 100}%")
+
 def tokenize(sentences: List[str]) -> List[List[str]]:
     with Pool() as pool:
         result = pool.map(tokenize_single_sentence, sentences)
@@ -48,10 +69,10 @@ def load_dataset(path: str, n_rows: int) -> pd.DataFrame:
     
 
 
-def word_freq(df: pd.DataFrame, top_k: int) -> Dict[str, int]:
+def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, int]:
     # Count the top 20 most frequent words grouped by "type" (aka the training set label / prediction target)
     word_freq = {}
-    for sent, label in zip(df["tokens"], df["type"]):
+    for sent, label in zip(df[col], df["type"]):
         if label == "NaN":
             continue
         for word in sent:
