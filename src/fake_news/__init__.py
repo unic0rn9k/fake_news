@@ -63,13 +63,10 @@ def tokenize(sentences: List[str]) -> List[List[str]]:
 
 
 def load_dataset(path: str, n_rows: int) -> pd.DataFrame:
-    return pd.read_csv(path, low_memory=False, nrows=n_rows)
-
-#def toeknize(text_col: List[str]) -> List[List[str]]:
-    
+    return pd.read_csv(path, low_memory=False, nrows=n_rows)    
 
 
-def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, int]:
+def word_freq_type(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, int]:
     # Count the top 20 most frequent words grouped by "type" (aka the training set label / prediction target)
     word_freq = {}
     for sent, label in zip(df[col], df["type"]):
@@ -85,6 +82,21 @@ def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokens") -> Dict[str, in
     }
 
     return word_freq
+
+def word_freq(df: pd.DataFrame, top_k: int, col: str = "tokenized_content") -> Dict[str, int]:
+    # Initialize a dictionary to store word frequencies
+    word_freq = {}
+
+    # Iterate through each row in the DataFrame
+    for sent in df[col]:
+        for word in sent:
+            word_freq[word] = word_freq.get(word, 0) + 1
+
+    # Sort the words by frequency and keep the top_k most frequent words
+    word_freq = dict(sorted(word_freq.items(), key=lambda item: item[1], reverse=True)[:top_k])
+
+    return word_freq
+
 
 
 def count_urls(text):
@@ -110,3 +122,4 @@ def count_quotes(text):
 
 def count_numbers(text):
     return len(re.findall(r"\b\d+\b", text))
+    
