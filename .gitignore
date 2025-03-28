@@ -19,3 +19,4 @@ bert
 bert2
 *.zip
 *.tsv
+*.pkl
